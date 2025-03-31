@@ -2,7 +2,7 @@
 
 # Prompts/Responses:
 
-All responses were from Claude AI.
+All responses and code are from Claude AI.
 
 ## Prompt 1: 
 
@@ -381,7 +381,8 @@ Would you like me to explain any specific part of the implementation in more det
         (module+ main
           (printf "Parser ready. Use (parse \"filename\") to parse a file.\n"))
 
-
+---
+---
 
 ## Prompt 2:
 
@@ -409,6 +410,7 @@ The code provided needs to be changed to implement the changes to the grammar pr
 ## Response 2:
 
 I'll provide a detailed breakdown of the steps needed to modify the existing Racket parser to accommodate the new grammar changes:
+
 1.	Token Additions In the tokenize function, we need to add new token types for comparison operators:
 
 ### Code1
@@ -434,8 +436,10 @@ I'll provide a detailed breakdown of the steps needed to modify the existing Rac
              [(and (not (null? (cdr chars))) (char=? (caadr chars) #\=))
               (get-tokens (cddr chars) (cons (token 'NOT_EQUAL "!=" (cdar chars)) tokens))]
              [else (get-tokens (cdr chars) (cons (token 'ERROR "Unexpected !" (cdar chars)) tokens)])]
+             
 
 2.	Modify parse-etail function We need to update the parse-etail function to handle the new comparison operators:
+   
 
 ### Code2
 
@@ -460,6 +464,7 @@ I'll provide a detailed breakdown of the steps needed to modify the existing Rac
                 (let ([expr (parse-expr)])
                   (list op expr))))]
            [else '()])))
+           
 
 3.	Detailed Explanation of Changes:
 
@@ -491,6 +496,7 @@ b) Parsing Modification:
 
 •	This allows expressions like "x < 5" or "y >= z" to be parsed correctly
 
+
 4.	Additional Considerations:
 
 •	The current implementation requires you to add the new token types to the token struct or type definitions
@@ -498,6 +504,7 @@ b) Parsing Modification:
 •	You might want to update error handling to properly recognize these new tokens
 
 •	The parse tree structure will now include comparison operators as potential extensions to expressions
+
 
 5.	Potential Grammar Validation: These changes allow for more complex expressions like:
 
