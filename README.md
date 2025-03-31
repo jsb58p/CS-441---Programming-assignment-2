@@ -6,7 +6,7 @@
 
 &nbsp;   When the grammar was updated by the instructor, getting Claude to update its code was a fairly simple process. It was able to identify the parts of the code that needed to change and generated the code to incorporate those changes. It also explained the changes it made.
 
-&nbsp;   I was surprised by how well Claude was able to interpret the basic instructions and create the entire program from scratch with no need for any significant changes. Claude is by far the best LLM that I have used so far. Claude genuinely made this assignment much easier than what it would have been if I haven't been using it. 
+&nbsp;   I was surprised by how well Claude was able to interpret the basic instructions and create the entire program from scratch with no need for any significant changes. Claude is by far the best LLM that I have used so far. Claude genuinely made this assignment much easier than what it would have been if I hadn't been using it. 
 
 &nbsp;   It's hard to say why this programming assignment was easier to generate with the LLM than the last one or suggest tips/insights because I'm not sure how much of it has to do with the LLM I'm using and how "familiar" it is with different types of programs. The major difference in how I approached this assignment, besides the fact that I started off using Claude instead of ChatGPT or CoPilot, is that the prompt I gave was very similar to the instructions given. All I did was trim out the parts that would be irrelevant to the LLM, such as where to download the DrRacket and anything not related to the source code.
 
