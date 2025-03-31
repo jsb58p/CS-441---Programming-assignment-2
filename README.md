@@ -2,7 +2,7 @@
 
 ## Summary of Development Process
 
-&nbsp;   In this programming assignment, the LLM (Claude) was helpful for every step of the process. I made slight modifications to the original instructions and gave it to Claude, and Claude was able to generate the program on its own, with explanations of what the code does. 
+&nbsp;   In this programming assignment, the LLM (Claude) was helpful for every step of the process. I made slight modifications to the instructions for the assignment and gave it to Claude, and Claude was able to generate the program on its own, with explanations of what the code does. 
 
 &nbsp;   When the grammar was updated by the instructor, getting Claude to update its code was a fairly simple process. It was able to identify the parts of the code that needed to change and generated the code to incorporate those changes. It also explained the changes it made.
 
