@@ -6,27 +6,33 @@ All responses were from Claude AI.
 
 ## Prompt 1: 
 
-Use Racket to write a simple parser. Note that we’re writing only a parser, not a full interpreter. Your program only needs to produce a parse tree for the given input. Your code should have a function called parse, which takes one parameter—the name of the file of source code to be processed: (parse "input.txt") It should return a string: either “Accept”, indicating the program is syntactically correct, and the parse tree; or a message as to which line the first syntax error was found. In the case of a syntax error, printing the offending line would also be helpful. It is not necessary to continue scanning for additional syntax errors. You are given a grammar for a simple calculator-style programming language. 
-Grammar, EBNF notation:
-program -> {stmt_list} $$
-stmt_list -> stmt stmt_list
-stmt_list -> epsilon
-stmt -> id = expr;
- 	| if (expr) stmt_list endif;
- 	| read id;
- 	| write expr;
-expr -> id etail
- 	| num etail
-etail -> + expr
- 	| - expr
- 	 | epsilon
-id -> [a-zA-Z]+
-num -> numsign digit digit*
-numsign -> + | - | epsilon 
+Use Racket to write a simple parser. Note that we’re writing only a parser, not a full interpreter. Your program only needs to produce a parse tree for the given input. Your code should have a function called parse, which takes one parameter—the name of the file of source code to be processed: (parse "input.txt") It should return a string: either “Accept”, indicating the program is syntactically correct, and the parse tree; or a message as to which line the first syntax error was found. In the case of a syntax error, printing the offending line would also be helpful. It is not necessary to continue scanning for additional syntax errors. You are given a grammar for a simple calculator-style programming language.
+
+    Grammar, EBNF notation:
+    program -> {stmt_list} $$
+    stmt_list -> stmt stmt_list
+    stmt_list -> epsilon
+    stmt -> id = expr;
+     	| if (expr) stmt_list endif;
+     	| read id;
+     	| write expr;
+    expr -> id etail
+     	| num etail
+    etail -> + expr
+     	| - expr
+     	 | epsilon
+    id -> [a-zA-Z]+
+    num -> numsign digit digit*
+    numsign -> + | - | epsilon 
+    
 Programming notes: 
+
 • You will need other functions besides parse, of course. This will be a top-down recursive- descent parser. You will need a function for each nonterminal. Of course, those functions may call sub-functions as needed. (If the subfunctions will not be needed elsewhere in the program, nest them inside the function that will use them. The principle of information hiding applies just as much in functional programming as in any other.) 
+
 • You’re not limited to printing just a final verdict; progress messages will probably be helpful in development. Your parse tree will be a large tree structure contained in a list. 
+
 • Deliverables: 
+
 ◦ Submit your source code (.rkt file).
 
 ## Response 1:
@@ -36,29 +42,53 @@ Recursive-Descent Parser in Racket
 ### Click to open code
 The recursive-descent parser I've created implements all the requirements of the grammar you provided. Here's an explanation of how it works:
 Main Components
+
 1.	Lexer (Tokenizer):
+
 •	Scans the input file character by character
+
 •	Identifies tokens like identifiers, numbers, keywords, and operators
+
 •	Keeps track of line and column positions for error reporting
+
 2.	Parser:
+
 •	Implements the recursive-descent parsing algorithm
+
 •	Contains a function for each non-terminal in the grammar
+
 •	Builds a parse tree as it processes the input
+
 3.	Main Parse Function:
+
 •	Reads the input file
+
 •	Calls the lexer to get tokens
+
 •	Calls the parser to build the parse tree
+
 •	Returns "Accept" and the parse tree if successful, or an error message
+
 Features
+
 •	Comprehensive Error Handling: Reports both lexical and syntax errors with line numbers and the offending line
+
 •	Position Tracking: Keeps track of line and column numbers for precise error reporting
+
 •	Proper Parse Tree Construction: Builds a structured parse tree that represents the program according to the grammar
+
 Usage
+
 You can use the parser by calling the parse function with the filename:
+
 racket
+
 Copy
+
 (parse "input.txt")
+
 This will return either "Accept" and display the parse tree, or a syntax error message with the line number and the offending line.
+
 Would you like me to explain any specific part of the implementation in more detail?
 
 ## Response 1 Code: 
@@ -350,4 +380,132 @@ Would you like me to explain any specific part of the implementation in more det
         ;; Test the parser
         (module+ main
           (printf "Parser ready. Use (parse \"filename\") to parse a file.\n"))
+
+
+
+## Prompt 2:
+
+    program -> {stmt_list} $$
+    stmt_list -> stmt stmt_list    
+    stmt_list -> epsilon   
+    stmt -> id = expr; 
+        | if (expr) stmt_list endif; 
+        | read id; 
+        | write expr;
+    expr -> id etail 
+       | num etail 
+    etail -> + expr 
+       | - expr 
+       | compare expr
+       | epsilon
+    id -> [a-zA-Z]+
+    num -> numsign digit digit*
+    numsign -> + | - | epsilon 
+    compare -> < | <= | > | >= | == | !=
+    
+The code provided needs to be changed to implement the changes to the grammar provided above. Do not rewrite the entire program. List the steps necessary to implement the changes, and provide only the code to be added to the program. Be detailed in explaining each change and where it should go in the program.
+
+
+## Response 2:
+
+I'll provide a detailed breakdown of the steps needed to modify the existing Racket parser to accommodate the new grammar changes:
+1.	Token Additions In the tokenize function, we need to add new token types for comparison operators:
+
+### Code1
+
+          ; Add these to the get-tokens function's else clause
+          [(#\<) 
+           (cond 
+             [(and (not (null? (cdr chars))) (char=? (caadr chars) #\=))
+              (get-tokens (cddr chars) (cons (token 'LESS_EQUAL "<=" (cdar chars)) tokens))]
+             [else (get-tokens (cdr chars) (cons (token 'LESS "<" (cdar chars)) tokens)])]
+          [(#\>) 
+           (cond 
+             [(and (not (null? (cdr chars))) (char=? (caadr chars) #\=))
+              (get-tokens (cddr chars) (cons (token 'GREATER_EQUAL ">=" (cdar chars)) tokens))]
+             [else (get-tokens (cdr chars) (cons (token 'GREATER ">" (cdar chars)) tokens)])]
+          [(#\=) 
+           (cond 
+             [(and (not (null? (cdr chars))) (char=? (caadr chars) #\=))
+              (get-tokens (cddr chars) (cons (token 'EQUAL "==" (cdar chars)) tokens))]
+             [else (get-tokens (cdr chars) (cons (token 'EQUALS "=" (cdar chars)) tokens)])]
+          [(#\!) 
+           (cond 
+             [(and (not (null? (cdr chars))) (char=? (caadr chars) #\=))
+              (get-tokens (cddr chars) (cons (token 'NOT_EQUAL "!=" (cdar chars)) tokens))]
+             [else (get-tokens (cdr chars) (cons (token 'ERROR "Unexpected !" (cdar chars)) tokens)])]
+
+2.	Modify parse-etail function We need to update the parse-etail function to handle the new comparison operators:
+
+### Code2
+
+     (define (parse-etail)
+       (let ([ct (current-token)])
+         (case (token-type ct)
+           [(PLUS) 
+            (begin
+              (match 'PLUS)
+              (let ([expr (parse-expr)])
+                (list '+ expr)))]
+           [(MINUS) 
+            (begin
+              (match 'MINUS)
+              (let ([expr (parse-expr)])
+                (list '- expr)))]
+           [(LESS LESS_EQUAL GREATER GREATER_EQUAL EQUAL NOT_EQUAL)
+            (begin
+              (let ([op (token-type ct)]
+                    [op-val (token-val ct)])
+                (advance)
+                (let ([expr (parse-expr)])
+                  (list op expr))))]
+           [else '()])))
+
+3.	Detailed Explanation of Changes:
+
+a) Token Additions:
+
+•	We've added new token types for comparison operators: 
+
+o	LESS "<"
+
+o	LESS_EQUAL "<="
+
+o	GREATER ">"
+
+o	GREATER_EQUAL ">="
+
+o	EQUAL "=="
+
+o	NOT_EQUAL "!="
+
+•	The code handles both two-character (<=, >=, ==, !=) and single-character (<, >) comparison operators
+
+•	These are added to the lexer's token recognition logic
+
+b) Parsing Modification:
+
+•	The parse-etail function is extended to recognize and parse comparison operators
+
+•	When a comparison operator is encountered, it creates a parse tree node with the operator type and the following expression
+
+•	This allows expressions like "x < 5" or "y >= z" to be parsed correctly
+
+4.	Additional Considerations:
+
+•	The current implementation requires you to add the new token types to the token struct or type definitions
+
+•	You might want to update error handling to properly recognize these new tokens
+
+•	The parse tree structure will now include comparison operators as potential extensions to expressions
+
+5.	Potential Grammar Validation: These changes allow for more complex expressions like:
+
+           x = y + 5
+           x = 10 < z
+           x = a + b == c - d
+
+Would you like me to elaborate on any of these changes or provide a more detailed implementation of any specific part?
+
+
 
