@@ -12,4 +12,4 @@
 
 &nbsp;   In contrast, in my last assignment I completely created my own prompts by describing every function that I wanted to create. I found that there were many errors when doing it that way and it required many iterations, each of which created a possibility for new errors. I think that giving the LLM a high-level description of what I want and allowing it figure out the "how" is better than trying to individually create a prompt for each and every function.  
 
-&nbsp;   The only changes that I manually made to the program were updating the description of the grammar (the commented out portion at the top of the program) and adding in missing parentheses from the code that Claude generated.
+&nbsp;   The only changes that I manually made to the program were updating the description of the grammar (the commented out portion at the top of the program) and adding in missing closing parentheses to the code that Claude generated.
